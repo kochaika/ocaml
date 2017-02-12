@@ -38,6 +38,8 @@ let string_of_expr x =
   let rec print = function 
   | Num i     -> sprintf "%d" i
   | Var c     -> sprintf "%c" c
+  | BinOp ('*',x,y) -> sprintf "(%s * %s)" (print x) (print y) 
+  | BinOp ('/',x,y) -> sprintf "(%s / %s)" (print x) (print y) 
   | BinOp (s,x,y) -> sprintf "%s %c %s" (print x) s (print y) 
   in sprintf "%s" (print x)
 
@@ -112,7 +114,7 @@ let _ =
   print_assigns s2; printf "\n";
   print_assigns s3; printf "\n";
   
-  let c0 = s3, (BinOp ('-', BinOp ('-', Var 'x', Var 'y'), Num 10) ) in 
+  let c0 = s3, (BinOp ('-', BinOp ('*', Var 'x', Var 'y'), Num 10) ) in 
 
   print_calc c0 ;
   
