@@ -38,8 +38,14 @@ let string_of_expr x =
   let rec print = function 
   | Num i     -> sprintf "%d" i
   | Var c     -> sprintf "%c" c
-  | BinOp ('*',x,y) -> sprintf "(%s) * (%s)" (print x) (print y) 
-  | BinOp ('/',x,y) -> sprintf "(%s) / (%s)" (print x) (print y) 
+  | BinOp ('*',BinOp(s1,x1,y1),BinOp(s2,x2,y2)) -> sprintf "(%s) * (%s)" (print (BinOp(s1,x1,y1))) (print (BinOp(s2,x2,y2))) 
+  | BinOp ('*',BinOp(s1,x1,y1),y) -> sprintf "(%s) * %s" (print (BinOp(s1,x1,y1))) (print y) 
+  | BinOp ('*',x,BinOp(s2,x2,y2)) -> sprintf "%s * (%s)" (print x) (print (BinOp(s2,x2,y2)))   
+  | BinOp ('*',x,y) -> sprintf "%s * %s" (print x) (print y) 
+  | BinOp ('/',BinOp(s1,x1,y1),BinOp(s2,x2,y2)) -> sprintf "(%s) / (%s)" (print (BinOp(s1,x1,y1))) (print (BinOp(s2,x2,y2))) 
+  | BinOp ('/',BinOp(s1,x1,y1),y) -> sprintf "(%s) / %s" (print (BinOp(s1,x1,y1))) (print y) 
+  | BinOp ('/',x,BinOp(s2,x2,y2)) -> sprintf "%s / (%s)" (print x) (print (BinOp(s2,x2,y2)))   
+  | BinOp ('/',x,y) -> sprintf "%s / %s" (print x) (print y) 
   | BinOp (s,x,y) -> sprintf "%s %c %s" (print x) s (print y) 
   in sprintf "%s" (print x)
 
@@ -96,7 +102,7 @@ let eval_calc (s, e) = eval_expr (eval_assigns s) e
 (* основная функция, несколько примеров *)
 let _ =
   let e0 = Num 7 in  
-  let e1 = BinOp ('/', Num 15, Num 5) in
+  let e1 = BinOp('/', BinOp ('/', Num 15, Num 5), Num 2 )in
   let e2 = BinOp ('+', BinOp('*', Var 'y', Num 3 ), Num 1) in
   
   print_expr e0;
